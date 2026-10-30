@@ -44,7 +44,7 @@ def main():
     # Setup loss function and optimizer
     loss_fn = nn.BCEWithLogitsLoss() # BCE står for binary cross entropy (Claude was here...{to fix bug})
     acc_fn = torchmetrics.Accuracy(task='binary').to(device) #<-- Denne er ik med i tutorial men burde virke :)
-    optimizer = torch.optim.Adam(params=model.parameters(), lr=1e-3) #StatQuest har et tutorial på hvordan vi finder den bedste learning rate hvis det er.
+    optimizer = torch.optim.Adam(params=model.parameters(), lr=1e-3) #Adam er mere tilgivende end SGD, men StatQuest har et tutorial på at finde learning rate hvis nødvendigt.
 
 
 
