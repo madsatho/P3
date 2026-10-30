@@ -20,6 +20,8 @@ transform = transforms.Compose([
 ])
 
 def main():
+    print(device)
+
     train_set = RealVsAIDataset("data/train_labels.csv", root, transform=transform)
     test_set = RealVsAIDataset("data/test_labels.csv", root, transform=transform)
 
