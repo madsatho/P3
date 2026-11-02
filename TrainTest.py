@@ -3,7 +3,6 @@ from tqdm.auto import tqdm
 from timeit import default_timer as timer
 
 
-
 def train_n_test(train_dataloader, test_dataloader, model, loss_fn, acc_fn, optimizer, device, epochs):
     train_time_start = timer()
 
@@ -70,9 +69,7 @@ def train_n_test(train_dataloader, test_dataloader, model, loss_fn, acc_fn, opti
 
 
 
-
-#DENNE SKAL FIXES!!!!!!!!!!!!!!!!
-
+#Denne er næsten en exact kop af test-loopet i train_n_test (men brug val settet her)
 def eval_model(model: torch.nn.Module,
                data_loader: torch.utils.data.DataLoader,
                loss_fn: torch.nn.Module,
@@ -96,5 +93,3 @@ def eval_model(model: torch.nn.Module,
     return {"model_name": model.__class__.__name__,  # only works when model was created with a class
             "model_loss": loss,
             "model_acc": acc}
-
-

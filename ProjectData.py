@@ -12,8 +12,8 @@ from TrainTest import train_n_test
 # Setup device-agnostic code
 device = "cuda" if torch.cuda.is_available() else "cpu"
 root = "data/my_real_vs_ai_dataset/my_real_vs_ai_dataset"
-epochs = 1
-BATCH_SIZE = 128
+epochs = 4
+BATCH_SIZE = 16
 
 transform = transforms.Compose([
     #transforms.Resize((256, 256)), <--- Ikke nødvendig
