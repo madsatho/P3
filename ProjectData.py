@@ -11,7 +11,7 @@ from Models import GraveXModelV0, GraveXModelV2
 # Setup device-agnostic code
 device = "cuda" if torch.cuda.is_available() else "cpu"
 root = "data/my_real_vs_ai_dataset/my_real_vs_ai_dataset"
-epochs = 3
+epochs = 4
 BATCH_SIZE = 128
 
 transform = transforms.Compose([
@@ -22,10 +22,18 @@ transform = transforms.Compose([
 def main():
     print(device)
 
+    # Check available GPU memory and total GPU memory
+    if torch.cuda.is_available():
+        print("GPU:", torch.cuda.get_device_name(0))
+        total_free_gpu_memory, total_gpu_memory = torch.cuda.mem_get_info()
+        print(f"Total free GPU memory: {round(total_free_gpu_memory * 1e-9, 3)} GB")
+        print(f"Total GPU memory: {round(total_gpu_memory * 1e-9, 3)} GB \n")
+
+
     train_set = RealVsAIDataset("data/train_labels.csv", root, transform=transform)
     test_set = RealVsAIDataset("data/test_labels.csv", root, transform=transform)
 
-    data_loaded_test(train_set, test_set)
+    #data_loaded_test(train_set, test_set)
     network_input=image_dimensions(train_set, True)
 
 
@@ -39,7 +47,7 @@ def main():
     print(f"Length of test dataloader: {len(test_dataloader)} batches of {BATCH_SIZE}") #<--- 12.5% af data btw :(
 
 
-    model = GraveXModelV2(input_shape=network_input, hidden_units=10, output_shape=1)
+    model = GraveXModelV2(input_shape=network_input, hidden_units=16, output_shape=1)
     model.to(device) # Sætter modellen på min GPU
 
 
@@ -82,7 +90,7 @@ def main():
             optimizer.step()
 
             # Print out how many samples have been seen
-            if batch % 50 == 0:
+            if batch % 25 == 0:
                 print(f"Looked at {batch * len(X)}/{len(train_dataloader.dataset)} samples")
 
 
@@ -114,7 +122,7 @@ def main():
             test_acc /= len(test_dataloader)
 
         ## Print out what's happening
-        print(f"\nTrain loss: {train_loss:.5f} | Test loss: {test_loss:.5f}, Test acc: {test_acc:.2f}\n")
+        print(f"\nTrain loss: {train_loss:.5f} | Test loss: {test_loss:.5f}, Test acc: {test_acc:.3f}\n")
 
 if __name__ == "__main__":
     main()

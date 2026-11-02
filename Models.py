@@ -27,21 +27,24 @@ class GraveXModelV2(nn.Module):
                       kernel_size=3,  # how big is the square that's going over the image?
                       stride=1,  # default
                       padding=1),
-            # options = "valid" (no padding) or "same" (output has same shape as input) or int for specific number
+            nn.BatchNorm2d(hidden_units),
             nn.ReLU(),
             nn.Conv2d(in_channels=hidden_units,
                       out_channels=hidden_units,
                       kernel_size=3,
                       stride=1,
                       padding=1),
+            nn.BatchNorm2d(hidden_units),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2,
                          stride=2)  # default stride value is same as kernel_size
         )
         self.block_2 = nn.Sequential(
             nn.Conv2d(hidden_units, hidden_units, 3, padding=1),
+            nn.BatchNorm2d(hidden_units),
             nn.ReLU(),
             nn.Conv2d(hidden_units, hidden_units, 3, padding=1),
+            nn.BatchNorm2d(hidden_units),
             nn.ReLU(),
             nn.MaxPool2d(2)
         )
