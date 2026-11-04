@@ -5,19 +5,20 @@ from torch.utils.data import DataLoader
 from torchvision import transforms
 
 from DataImport import RealVsAIDataset, data_loaded_test, image_dimensions
-from Models import GraveXModelV0, GraveXModelV2
+from Models import GraveXModelV0, GraveXModelV2, GraveXModelV3
 from TrainTest import train_n_test
 
 
 # Setup device-agnostic code
 device = "cuda" if torch.cuda.is_available() else "cpu"
 root = "data/my_real_vs_ai_dataset/my_real_vs_ai_dataset"
-epochs = 4
-BATCH_SIZE = 16
+epochs = 5
+BATCH_SIZE = 128
 
 transform = transforms.Compose([
     #transforms.Resize((256, 256)), <--- Ikke nødvendig
     transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
 def main():
@@ -48,7 +49,7 @@ def main():
     print(f"Length of test dataloader: {len(test_dataloader)} batches of {BATCH_SIZE}") #<--- 12.5% af data btw :(
 
 
-    model = GraveXModelV2(input_shape=network_input, hidden_units=10, output_shape=1)
+    model = GraveXModelV3(input_shape=network_input, hidden_units=16, output_shape=1)
     model.to(device) # Sætter modellen på min GPU
 
 
