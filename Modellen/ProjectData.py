@@ -4,8 +4,8 @@ import torchmetrics
 from torch.utils.data import DataLoader
 from torchvision import transforms
 
-from DataImport import RealVsAIDataset, data_loaded_test, image_dimensions
-from Models import GraveXModelV0, GraveXModelV2, GraveXModelV3
+from Modellen.DataImport import RealVsAIDataset, image_dimensions
+from Modellen.Models import GraveXModelV3
 from TrainTest import train_n_test
 
 
