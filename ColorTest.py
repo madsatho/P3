@@ -6,14 +6,14 @@ from Modellen.DataImport import RealVsAIDataset
 
 CSV_FILE = "data/test_labels.csv"
 ROOT_DIR = "data/my_real_vs_ai_dataset/my_real_vs_ai_dataset"
-SAMPLES_PER_CLASS = 100
+SAMPLES_PER_CLASS = 50
 SEED = 0
 TOLERANCE = 5
 # ------------------
 
 # PILToTensor gives a uint8 tensor of shape (3, height, width), values 0-255
 dataset = RealVsAIDataset(CSV_FILE, ROOT_DIR, transform=transforms.PILToTensor()) #Loader test csv
-labels = torch.tensor(dataset.annotations.iloc[:, 2].astype(int).values) # Fordi datasættet er en form for liste af tuples bruger vi iloc
+labels = torch.tensor(dataset.annotations.iloc[:, 2].values) # Fordi datasættet er en form for liste af tuples bruger vi iloc
 print("Label counts in CSV:", {0: int((labels == 0).sum()), 1: int((labels == 1).sum())})
 
 # ---- Pick random images from each class ----
@@ -62,7 +62,7 @@ for count, i in enumerate(order.tolist(), start=1): #Enumerate tager bare hvert 
     # Remember which colours occurred
     s["colours"][code] = True
 
-    # Has this exact colour been at this exact position before?
+    # Has this exact colour been at this exact position before?   <----- Dette DRÆBER RAM. Tager FKN meget memory
     keys = (torch.arange(len(pixels)) * 16777216 + code).tolist()
     s["repeats"] += sum(k in s["seen"] for k in keys)
     s["seen"].update(keys)
@@ -86,7 +86,6 @@ for label in (0, 1):
 
 # ---- Colours unique to one class (with tolerance) ----
 def grow(colours, tol):
-    """Mark every colour within +/- tol of a colour that occurred."""
     cube = colours.reshape(1, 1, 256, 256, 256).float()   # one axis each for R, G, B
     width = 2 * tol + 1
     for dim in range(3):                                   # grow along R, then G, then B
@@ -97,7 +96,7 @@ def grow(colours, tol):
         cube = F.max_pool3d(cube, tuple(kernel), stride=1, padding=tuple(pad))
     return cube.reshape(-1) > 0
 
-only_ai = stats[0]["colours"] & ~grow(stats[1]["colours"], TOLERANCE)
+only_ai = stats[0]["colours"] & ~grow(stats[1]["colours"], TOLERANCE) # ~ Er en NOT operator. & er en bit operator der (her) operere på binære værdier den giver sandt hvis 2 elementer er ens
 only_real = stats[1]["colours"] & ~grow(stats[0]["colours"], TOLERANCE)
 
 print(f"\nUnique colours with tolerance +/-{TOLERANCE}:")
