@@ -1,7 +1,7 @@
 import torch
 import torch.nn.functional as F
 from torchvision import transforms
-from DataImport import RealVsAIDataset
+from Modellen.DataImport import RealVsAIDataset
 
 
 CSV_FILE = "data/test_labels.csv"
