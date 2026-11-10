@@ -1,3 +1,5 @@
+import os.path
+
 import torch
 from torch import nn #<--- Fordi jeg ik vil skrive torch.nn.Module hver gang
 import torchmetrics
@@ -11,7 +13,7 @@ from TrainTest import train_n_test
 
 # Setup device-agnostic code
 device = "cuda" if torch.cuda.is_available() else "cpu"
-root = "data/my_real_vs_ai_dataset/my_real_vs_ai_dataset"
+root = os.path.join("..","data/my_real_vs_ai_dataset/my_real_vs_ai_dataset")
 epochs = 12
 BATCH_SIZE = 128
 
@@ -32,8 +34,8 @@ def main():
         print(f"Total GPU memory: {round(total_gpu_memory * 1e-9, 3)} GB \n")
 
 
-    train_set = RealVsAIDataset("data/train_labels.csv", root, transform=transform)
-    test_set = RealVsAIDataset("data/test_labels.csv", root, transform=transform)
+    train_set = RealVsAIDataset("../data/train_labels.csv", root, transform=transform)
+    test_set = RealVsAIDataset("../data/test_labels.csv", root, transform=transform)
 
     #data_loaded_test(train_set, test_set)
     network_input=image_dimensions(train_set, True)
