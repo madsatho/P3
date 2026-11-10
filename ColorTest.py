@@ -9,7 +9,7 @@ ROOT_DIR = "data/my_real_vs_ai_dataset/my_real_vs_ai_dataset"
 SAMPLES_PER_CLASS = 100
 SEED = 0
 TOLERANCE = 5
-# -------------------
+# ------------------
 
 # PILToTensor gives a uint8 tensor of shape (3, height, width), values 0-255
 dataset = RealVsAIDataset(CSV_FILE, ROOT_DIR, transform=transforms.PILToTensor()) #Loader test csv
