@@ -4,11 +4,11 @@ from torchvision import transforms
 from Modellen.DataImport import RealVsAIDataset
 
 
-CSV_FILE = "data/test_labels.csv"
+CSV_FILE = "data/train_labels.csv"
 ROOT_DIR = "data/my_real_vs_ai_dataset/my_real_vs_ai_dataset"
-SAMPLES_PER_CLASS = 50
+SAMPLES_PER_CLASS = 70000
 SEED = 0
-TOLERANCE = 5
+TOLERANCE = 0
 # ------------------
 
 # PILToTensor gives a uint8 tensor of shape (3, height, width), values 0-255
