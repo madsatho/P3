@@ -315,52 +315,6 @@ def plot_brightness():
 
 # ==================================================
 #                  FIGURE 3
-#                RGB HEATMAPS
-# ==================================================
-
-def plot_color_heatmaps():
-
-    distributions = [
-        ("hist_rg", "Red vs Green", "Red", "Green"),
-        ("hist_gb", "Green vs Blue", "Green", "Blue"),
-        ("hist_rb", "Red vs Blue", "Red", "Blue")
-    ]
-
-    fig, axes = plt.subplots(2, 3, figsize=(16, 10))
-
-    for col, (key, title, x_label, y_label) in enumerate(distributions):
-
-        for row, (label, name) in enumerate([
-            (0, "AI"),
-            (1, "Real")
-        ]):
-
-            hist = stats[label][key].numpy().astype(float)
-
-            hist /= hist.sum()
-
-            # Logarithmic scale
-            hist = np.log1p(hist * 100000)
-
-            axes[row, col].imshow(
-                hist,
-                origin="lower",
-                extent=[0, 255, 0, 255],
-                aspect="auto",
-                cmap="inferno"
-            )
-
-            axes[row, col].set_title(f"{name}: {title}")
-            axes[row, col].set_xlabel(x_label)
-            axes[row, col].set_ylabel(y_label)
-
-    plt.suptitle("RGB colour combination distributions")
-    plt.tight_layout()
-    plt.show()
-
-
-# ==================================================
-#                  FIGURE 4
 #                 RGB TRIANGLE
 # ==================================================
 
@@ -425,85 +379,6 @@ def plot_rgb_triangle():
 
 
 # ==================================================
-#                  FIGURE 5
-#                 MEAN COLOURS
-# ==================================================
-
-def plot_mean_colors():
-
-    fig, axes = plt.subplots(1, 2, figsize=(8, 4))
-
-    for ax, label, name in zip(
-        axes,
-        [0, 1],
-        ["AI", "Real"]
-    ):
-
-        mean = stats[label]["sum"].float() / stats[label]["n"]
-
-        rgb = (mean / 255).numpy()
-
-        ax.imshow(
-            np.ones((100, 100, 3)) * rgb
-        )
-
-        ax.set_title(
-            f"{name}\nRGB: {mean.round().int().tolist()}"
-        )
-
-        ax.axis("off")
-
-    plt.suptitle("Mean RGB colour")
-    plt.tight_layout()
-    plt.show()
-
-
-# ==================================================
-#                  FIGURE 6
-#            FREQUENCY DIFFERENCES
-# ==================================================
-
-def plot_color_frequency_difference():
-
-    fig, axes = plt.subplots(1, 3, figsize=(17, 5))
-
-    channels = ["Red", "Green", "Blue"]
-
-    for i, ax in enumerate(axes):
-
-        ai = stats[0]["hist_rgb"][i].numpy().astype(float)
-        real = stats[1]["hist_rgb"][i].numpy().astype(float)
-
-        ai /= ai.sum()
-        real /= real.sum()
-
-        difference = real - ai
-
-        ax.bar(
-            np.arange(256),
-            difference,
-            width=1,
-            color="black"
-        )
-
-        ax.axhline(
-            0,
-            color="red",
-            linewidth=0.8
-        )
-
-        ax.set_title(f"{channels[i]} frequency difference")
-        ax.set_xlabel("Pixel intensity (0-255)")
-        ax.set_ylabel("Real - AI proportion")
-
-        ax.grid(alpha=0.2)
-
-    plt.suptitle("Difference in RGB frequency distributions")
-    plt.tight_layout()
-    plt.show()
-
-
-# ==================================================
 #                 RUN FIGURES
 # ==================================================
 
@@ -514,15 +389,6 @@ print("\nGenerating figure 2...", flush=True)
 plot_brightness()
 
 print("\nGenerating figure 3...", flush=True)
-plot_color_heatmaps()
-
-print("\nGenerating figure 4...", flush=True)
 plot_rgb_triangle()
-
-print("\nGenerating figure 5...", flush=True)
-plot_mean_colors()
-
-print("\nGenerating figure 6...", flush=True)
-plot_color_frequency_difference()
 
 print("\nAll figures generated!", flush=True)
