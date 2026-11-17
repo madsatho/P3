@@ -63,9 +63,9 @@ for count, i in enumerate(order.tolist(), start=1): #Enumerate tager bare hvert 
     s["colours"][code] = True
 
     # Has this exact colour been at this exact position before?   <----- Dette DRÆBER RAM. Tager FKN meget memory
-    keys = (torch.arange(len(pixels)) * 16777216 + code).tolist()
-    s["repeats"] += sum(k in s["seen"] for k in keys)
-    s["seen"].update(keys)
+#    keys = (torch.arange(len(pixels)) * 16777216 + code).tolist()
+#    s["repeats"] += sum(k in s["seen"] for k in keys)
+#    s["seen"].update(keys)
 
     if count % 10 == 0:
         print(f"Processed {count} / {len(order)} images")
@@ -81,8 +81,8 @@ for label in (0, 1):
         print(f"{ch}: mean {mean[c]:.2f}")
     print(f"Brightness: mean {s['bright_sum'] / s['n']:.2f}")
     print(f"Distinct colours: {int(s['colours'].sum()):,}")
-    print(f"Pixels with a colour already seen at that position: "
-          f"{s['repeats']:,} ({100 * s['repeats'] / s['n']:.2f}%)")
+#    print(f"Pixels with a colour already seen at that position: "
+#          f"{s['repeats']:,} ({100 * s['repeats'] / s['n']:.2f}%)")
 
 # ---- Colours unique to one class (with tolerance) ----
 def grow(colours, tol):
