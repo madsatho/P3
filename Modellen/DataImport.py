@@ -49,6 +49,7 @@ def data_loaded_test(train_set, test_set, show_picture=False, get_data=True):
         plt.imshow(image.permute(1, 2, 0).detach().cpu().numpy())
         plt.show()
 
+
 def image_dimensions(image_set, CNN=False):
     image, label = image_set[0]
     if CNN:
