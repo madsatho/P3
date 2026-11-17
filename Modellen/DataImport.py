@@ -31,18 +31,21 @@ class RealVsAIDataset(Dataset):
 
         return image, y_label
 
-def data_loaded_test(train_set, test_set, show_picture=False):
+def data_loaded_test(train_set, test_set, show_picture=False, get_data=True):
 
     # Basic checks on one item:
-    print(f"Number of items {train_set} :", len(train_set))
-    print(f"Number of items {test_set} :", len(test_set))
+    if get_data:
+        print(f"Number of items {train_set} :", len(train_set))
+        print(f"Number of items {test_set} :", len(test_set))
 
     image, label = train_set[0]
-    print("Image shape:", image.shape)  # expect torch.Size([3, 256, 256])
-    print("Image dtype:", image.dtype)  # expect torch.float32
-    print(f"Mean color value: {image.mean().item()}")  # within 0 and 1
-    print(f"Label type: {type(label)}, Label værdi: {label}")
-    print(f"IMG type: {type(image)}")
+
+    if get_data:
+        print("Image shape:", image.shape)  # expect torch.Size([3, 256, 256])
+        print("Image dtype:", image.dtype)  # expect torch.float32
+        print(f"Mean color value: {image.mean().item()}")  # within 0 and 1
+        print(f"Label type: {type(label)}, Label værdi: {label}")
+        print(f"IMG type: {type(image)}")
 
     if show_picture:
         plt.imshow(image.permute(1, 2, 0).detach().cpu().numpy())
