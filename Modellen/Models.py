@@ -87,3 +87,39 @@ class GraveXModelV3(nn.Module):
 
     def forward(self, x):
         return self.classifier(self.layer_stack(x))
+
+class GraveXModelV4(nn.Module):
+
+    def __init__(self, input_shape: int, hidden_units: int, output_shape: int):
+
+        super().__init__()
+
+        self.layer_stack = nn.Sequential(
+
+            depthwise_separable_conv(input_shape, hidden_units),
+
+            depthwise_separable_conv(hidden_units, hidden_units * 2),
+
+            depthwise_separable_conv(hidden_units * 2, hidden_units * 4),
+
+            depthwise_separable_conv(hidden_units * 4, hidden_units * 8)
+
+        )
+
+        self.classifier = nn.Sequential(
+
+            nn.AdaptiveAvgPool2d(4),
+
+            nn.Flatten(),
+
+            nn.Linear(hidden_units * 8 * 4 * 4, output_shape)
+
+        )
+
+    def forward(self, x):
+
+        x = self.layer_stack(x)
+
+        x = self.classifier(x)
+
+        return x
