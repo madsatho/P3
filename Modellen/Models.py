@@ -3,7 +3,7 @@ from torch import nn #<--- Fordi jeg ik vil skrive torch.nn.Module hver gang
 from torch.nn import AdaptiveAvgPool2d
 
 
-#Model struktur inspireret fra https://www.learnpytorch.io/ af forfatter Daniel Bork
+#Model struktur inspireret fra https://www.learnpytorch.io/ 
 
 class GraveXModelV0(nn.Module):
     def __init__(self, input_shape: int, hidden_units: int, output_shape: int):
@@ -88,38 +88,50 @@ class GraveXModelV3(nn.Module):
     def forward(self, x):
         return self.classifier(self.layer_stack(x))
 
+
+# ---------------- NYT: det der manglede til V4 ----------------
+
+def sep_conv(in_ch: int, out_ch: int):
+    # Trin 1 (depthwise): hver kanal får sit eget 3x3 filter
+    # Trin 2 (pointwise): 1x1 conv blander kanalerne sammen
+    return nn.Sequential(
+        nn.Conv2d(in_ch, in_ch, kernel_size=3, padding=1, groups=in_ch, bias=False),
+        nn.BatchNorm2d(in_ch),
+        nn.ReLU(),
+        nn.Conv2d(in_ch, out_ch, kernel_size=1, bias=False),
+        nn.BatchNorm2d(out_ch),
+        nn.ReLU(),
+    )
+
+def depthwise_separable_conv(input_shape: int, output_shape: int):
+    # Samme opbygning som conv_layer, bare med depthwise + pointwise
+    return nn.Sequential(
+        sep_conv(input_shape, output_shape),
+        sep_conv(output_shape, output_shape),
+        nn.MaxPool2d(2)
+    )
+
+
+
 class GraveXModelV4(nn.Module):
-
-    def __init__(self, input_shape: int, hidden_units: int, output_shape: int):
-
+    def __init__(self, input_shape: int, hidden_units: int, output_shape: int, dropout: float = 0.3):
         super().__init__()
-
         self.layer_stack = nn.Sequential(
-
             depthwise_separable_conv(input_shape, hidden_units),
-
             depthwise_separable_conv(hidden_units, hidden_units * 2),
-
             depthwise_separable_conv(hidden_units * 2, hidden_units * 4),
-
             depthwise_separable_conv(hidden_units * 4, hidden_units * 8)
-
         )
 
         self.classifier = nn.Sequential(
-
             nn.AdaptiveAvgPool2d(4),
-
             nn.Flatten(),
-
+            nn.Dropout(p=dropout),   # NYT: dropout
             nn.Linear(hidden_units * 8 * 4 * 4, output_shape)
-
         )
 
     def forward(self, x):
-
         x = self.layer_stack(x)
-
         x = self.classifier(x)
-
         return x
+
