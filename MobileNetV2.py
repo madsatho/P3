@@ -11,7 +11,7 @@ weights = MobileNet_V2_Weights.DEFAULT
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 combined_dataset = RealVsAIDataset("data/train_labels.csv", "data/my_real_vs_ai_dataset/my_real_vs_ai_dataset", transform=weights.transforms())
-combined_dataloader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=4, pin_memory=True, persistent_workers=True)
+combined_dataloader = DataLoader(comined_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=4, pin_memory=True, persistent_workers=True)
 
 
 model = models.mobilenet_v2(weights=weights)
